@@ -91,10 +91,11 @@ function createHelpText(fd) {
 
 function createFieldWrapper(fd, tagName = "div") {
     const fieldWrapper = document.createElement(tagName);
-    if (fd.Type !== 'radio') {
+    if (fd.Type !== 'radio' && fd.Type !== 'fieldset') {
         fieldWrapper.setAttribute('itemtype', 'component');
         fieldWrapper.setAttribute('itemid', generateItemId(fd.Name));
         fieldWrapper.setAttribute('itemscope', '');
+        fieldWrapper.setAttribute('data-editor-itemlabel', fd.Label);
     }
     const nameStyle = fd.Name ? ` form-${fd.Name}` : "";
     const fieldId = `form-${fd.Type}-wrapper${nameStyle}`;
@@ -187,6 +188,11 @@ function createLegend(fd) {
 function createFieldSet(fd) {
     const wrapper = createFieldWrapper(fd, "fieldset");
     wrapper.name = fd.Name;
+    wrapper.setAttribute('itemtype', 'container');
+    wrapper.setAttribute('itemid', generateItemId(fd.Name));
+    wrapper.setAttribute('itemscope', '');
+    wrapper.setAttribute('data-editor-itemlabel', fd.Label);
+    wrapper.setAttribute('data-editor-behavior', "component");
     //   wrapper.replaceChildren(createLegend(fd));
     return wrapper;
 }
@@ -385,6 +391,10 @@ export default async function decorate(block) {
         form.setAttribute('itemtype', 'container');
         form.setAttribute('itemid', generateItemId());
         form.setAttribute('itemscope', '');
+        form.setAttribute('data-editor-itemlabel', 'Form Container');
+        form.setAttribute('data-editor-itemmodel', 'container');
+        form.setAttribute('data-editor-behavior', "component");
+
         block.setAttribute('itemid', generateItemId());
         formLink.replaceWith(form);
     }
