@@ -93,9 +93,11 @@ function createFieldWrapper(fd, tagName = "div") {
     const fieldWrapper = document.createElement(tagName);
     if (fd.Type !== 'radio' && fd.Type !== 'fieldset') {
         fieldWrapper.setAttribute('itemtype', 'component');
-        fieldWrapper.setAttribute('itemid', generateItemId(fd.Name));
+        fieldWrapper.setAttribute('itemid', generateItemId(fd.Id));
         fieldWrapper.setAttribute('itemscope', '');
-        fieldWrapper.setAttribute('data-editor-itemlabel', fd.Label);
+        fieldWrapper.setAttribute('data-editor-itemlabel', fd.Label || fd.Name);
+        fieldWrapper.setAttribute('data-editor-itemmodel', fd.Type);
+
     }
     const nameStyle = fd.Name ? ` form-${fd.Name}` : "";
     const fieldId = `form-${fd.Type}-wrapper${nameStyle}`;
@@ -189,10 +191,11 @@ function createFieldSet(fd) {
     const wrapper = createFieldWrapper(fd, "fieldset");
     wrapper.name = fd.Name;
     wrapper.setAttribute('itemtype', 'container');
-    wrapper.setAttribute('itemid', generateItemId(fd.Name));
+    wrapper.setAttribute('itemid', generateItemId(fd.Id));
     wrapper.setAttribute('itemscope', '');
     wrapper.setAttribute('data-editor-itemlabel', fd.Label);
     wrapper.setAttribute('data-editor-behavior', "component");
+    wrapper.setAttribute('data-editor-itemmodel', "fieldset");
     //   wrapper.replaceChildren(createLegend(fd));
     return wrapper;
 }
@@ -377,9 +380,17 @@ function topFormExpressBox() {
 
 function generateItemId(name) {
     if (name) {
-        return `urn:fnkconnection:${window.formPath}:default:Name:${name}`;
+        return `urn:fnkconnection:${window.formPath}:default:Id:${name}`;
     } else {
         return `urn:fnkconnection:${window.formPath}:default`;
+    }
+}
+
+function generateAemItemId(name) {
+    if (name) {
+        return `urn:aem:/content/forms/af/ue-vega/jcr:content/${name}`;
+    } else {
+        return `urn:aem:/content/forms/af/ue-vega/default`;
     }
 }
 
